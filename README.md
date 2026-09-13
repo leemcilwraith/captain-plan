@@ -32,6 +32,10 @@ app of choice.
   {{oppositionContact}}, {{umpires}}, {{clubName}}, {{senderName}},
   {{kit}}, {{clubhouse}}), plus a live preview. The default template is
   based on Lee's existing wording, converted to plain text.
+- **Guide** (`/guide`) - in-app walkthrough: first-time setup order, the
+  weekly matchday routine, and a "good to know" list (away fixtures, no
+  cross-device sync, backups, add-to-home-screen). The same tips are
+  echoed as short hints in each page's empty state.
 
 ## Local development
 

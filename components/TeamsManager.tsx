@@ -1,6 +1,7 @@
 "use client";
 
 import { useState } from "react";
+import Link from "next/link";
 import { useStore } from "@/lib/store";
 import type { Contact, Team } from "@/lib/types";
 
@@ -242,7 +243,16 @@ export default function TeamsManager() {
 
       {teams.length === 0 && (
         <p className="text-center text-sm text-slate-400">
-          Add the opposition teams you play, along with their fixtures secretary / umpire contacts.
+          Add the opposition teams you play, pulled from GMS / whostheumpire.com, along with their fixtures
+          secretary contacts. Got a lot to add? Use <strong>+ Paste emails</strong> below, or the{" "}
+          <Link href="/settings" className="text-pitch-600 underline">
+            Import / backup data
+          </Link>{" "}
+          tool on Settings to load everything from a file at once. See the{" "}
+          <Link href="/guide" className="text-pitch-600 underline">
+            Guide
+          </Link>{" "}
+          for the full setup order.
         </p>
       )}
 

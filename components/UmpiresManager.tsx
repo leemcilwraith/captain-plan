@@ -1,6 +1,7 @@
 "use client";
 
 import { useState } from "react";
+import Link from "next/link";
 import { useStore } from "@/lib/store";
 import type { Umpire } from "@/lib/types";
 
@@ -61,7 +62,14 @@ export default function UmpiresManager() {
       </div>
 
       {umpires.length === 0 && (
-        <p className="text-center text-sm text-slate-400">Add the umpires you regularly book for home games.</p>
+        <p className="text-center text-sm text-slate-400">
+          Add the umpires you regularly book for home games - you can keep adding to this list all season as you
+          book new ones. See the{" "}
+          <Link href="/guide" className="text-pitch-600 underline">
+            Guide
+          </Link>{" "}
+          for the full setup order.
+        </p>
       )}
 
       <div className="card divide-y divide-slate-100">

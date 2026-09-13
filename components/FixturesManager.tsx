@@ -1,6 +1,7 @@
 "use client";
 
 import { useState } from "react";
+import Link from "next/link";
 import { useStore } from "@/lib/store";
 import { sortByDateTime } from "@/lib/date";
 import FixtureCard from "./FixtureCard";
@@ -27,7 +28,11 @@ export default function FixturesManager() {
 
       {fixtures.length === 0 && !adding && (
         <p className="text-center text-sm text-slate-400">
-          No fixtures yet. Add your teams and venues first, then schedule a fixture.
+          No fixtures yet. Add your teams and venues first, then schedule a fixture. New here? See the{" "}
+          <Link href="/guide" className="text-pitch-600 underline">
+            Guide
+          </Link>{" "}
+          for the full setup order.
         </p>
       )}
 

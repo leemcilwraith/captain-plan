@@ -9,6 +9,7 @@ const links = [
   { href: "/umpires", label: "Umpires" },
   { href: "/venues", label: "Venues" },
   { href: "/settings", label: "Email template" },
+  { href: "/guide", label: "Guide" },
 ];
 
 export default function Nav() {

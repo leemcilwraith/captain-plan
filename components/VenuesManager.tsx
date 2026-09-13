@@ -1,6 +1,7 @@
 "use client";
 
 import { useState } from "react";
+import Link from "next/link";
 import { useStore } from "@/lib/store";
 import type { Venue } from "@/lib/types";
 
@@ -71,7 +72,11 @@ export default function VenuesManager() {
 
       {venues.length === 0 && (
         <p className="text-center text-sm text-slate-400">
-          Add your home ground(s), including parking instructions to drop straight into emails.
+          Add your home ground(s), including parking instructions to drop straight into emails. See the{" "}
+          <Link href="/guide" className="text-pitch-600 underline">
+            Guide
+          </Link>{" "}
+          for the full setup order.
         </p>
       )}
 
