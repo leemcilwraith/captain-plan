@@ -167,7 +167,16 @@ function TeamCard({ team }: { team: Team }) {
               </div>
               <div className="flex gap-2">
                 <button className="btn-secondary" onClick={() => setEditingContactId(contact.id)}>Edit</button>
-                <button className="btn-danger" onClick={() => deleteContact(team.id, contact.id)}>Remove</button>
+                <button
+                  className="btn-danger"
+                  onClick={() => {
+                    if (confirm(`Remove ${contact.name || contact.email}?`)) {
+                      deleteContact(team.id, contact.id);
+                    }
+                  }}
+                >
+                  Remove
+                </button>
               </div>
             </div>
           )

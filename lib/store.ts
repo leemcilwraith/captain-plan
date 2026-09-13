@@ -4,7 +4,7 @@ import { create } from "zustand";
 import { createJSONStorage, persist } from "zustand/middleware";
 import { createId } from "./id";
 import { DEFAULT_TEMPLATE } from "./template";
-import type { AppState, Contact, Fixture, Settings, Team, Umpire, Venue } from "./types";
+import type { AppState, Contact, Fixture, ImportSummary, SeedData, Settings, Team, Umpire, Venue } from "./types";
 
 interface StoreActions {
   hasHydrated: boolean;
@@ -33,6 +33,8 @@ interface StoreActions {
   markFixtureEmailGenerated: (id: string) => void;
 
   updateSettings: (patch: Partial<Settings>) => void;
+
+  importSeedData: (data: SeedData) => ImportSummary;
 }
 
 type Store = AppState & StoreActions;
@@ -171,6 +173,82 @@ export const useStore = create<Store>()(
 
       updateSettings: (patch) => {
         set((state) => ({ settings: { ...state.settings, ...patch } }));
+      },
+
+      importSeedData: (data) => {
+        const summary: ImportSummary = { teamsAdded: 0, contactsAdded: 0, umpiresAdded: 0, venuesAdded: 0 };
+
+        set((state) => {
+          let teams = state.teams;
+          for (const seedTeam of data.teams ?? []) {
+            const teamName = seedTeam.name.trim();
+            if (!teamName) continue;
+            const nameKey = teamName.toLowerCase();
+            let team = teams.find((t) => t.name.trim().toLowerCase() === nameKey);
+            if (!team) {
+              team = { id: createId(), name: teamName, contacts: [] };
+              teams = [...teams, team];
+              summary.teamsAdded += 1;
+            }
+            const existingEmails = new Set(team.contacts.map((c) => c.email.toLowerCase()));
+            const newContacts: Contact[] = (seedTeam.contacts ?? [])
+              .filter((c) => c.email?.trim() && !existingEmails.has(c.email.trim().toLowerCase()))
+              .map((c) => ({
+                id: createId(),
+                name: c.name?.trim() || undefined,
+                email: c.email.trim(),
+                phone: c.phone?.trim() || undefined,
+                role: c.role?.trim() || undefined,
+              }));
+            if (newContacts.length) {
+              summary.contactsAdded += newContacts.length;
+              const teamId = team.id;
+              teams = teams.map((t) => (t.id === teamId ? { ...t, contacts: [...t.contacts, ...newContacts] } : t));
+            }
+          }
+
+          let umpires = state.umpires;
+          for (const seedUmpire of data.umpires ?? []) {
+            const name = seedUmpire.name.trim();
+            if (!name) continue;
+            const nameKey = name.toLowerCase();
+            const emailKey = seedUmpire.email?.trim().toLowerCase();
+            const exists = umpires.some(
+              (u) => u.name.trim().toLowerCase() === nameKey || (emailKey && u.email?.toLowerCase() === emailKey)
+            );
+            if (!exists) {
+              umpires = [
+                ...umpires,
+                { id: createId(), name, email: seedUmpire.email?.trim() || undefined, phone: seedUmpire.phone?.trim() || undefined },
+              ];
+              summary.umpiresAdded += 1;
+            }
+          }
+
+          let venues = state.venues;
+          for (const seedVenue of data.venues ?? []) {
+            const name = seedVenue.name.trim();
+            if (!name) continue;
+            const nameKey = name.toLowerCase();
+            const exists = venues.some((v) => v.name.trim().toLowerCase() === nameKey);
+            if (!exists) {
+              venues = [
+                ...venues,
+                {
+                  id: createId(),
+                  name,
+                  address: seedVenue.address?.trim() || undefined,
+                  parkingInfo: seedVenue.parkingInfo?.trim() || undefined,
+                },
+              ];
+              summary.venuesAdded += 1;
+            }
+          }
+
+          return { teams, umpires, venues };
+        });
+
+        return summary;
       },
     }),
     {

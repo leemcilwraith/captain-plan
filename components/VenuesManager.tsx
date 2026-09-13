@@ -97,7 +97,16 @@ export default function VenuesManager() {
                 </div>
                 <div className="flex shrink-0 gap-2">
                   <button className="btn-secondary" onClick={() => setEditingId(venue.id)}>Edit</button>
-                  <button className="btn-danger" onClick={() => deleteVenue(venue.id)}>Remove</button>
+                  <button
+                    className="btn-danger"
+                    onClick={() => {
+                      if (confirm(`Remove ${venue.name}? Fixtures using it will keep their date/time but lose the venue link.`)) {
+                        deleteVenue(venue.id);
+                      }
+                    }}
+                  >
+                    Remove
+                  </button>
                 </div>
               </div>
             )}

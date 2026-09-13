@@ -4,6 +4,7 @@ import { useRef, useState } from "react";
 import { useStore } from "@/lib/store";
 import { buildTemplateData, renderEmail, TEMPLATE_VARIABLES } from "@/lib/template";
 import type { Contact, Fixture, Team, Umpire, Venue } from "@/lib/types";
+import DataImportExport from "./DataImportExport";
 
 const SAMPLE_FIXTURE: Fixture = {
   id: "sample",
@@ -98,6 +99,8 @@ export default function SettingsManager() {
 
   return (
     <div className="space-y-4">
+      <DataImportExport />
+
       <div className="card space-y-3">
         <h2 className="text-sm font-semibold text-slate-500">Club details</h2>
         <div className="grid gap-3 sm:grid-cols-2">

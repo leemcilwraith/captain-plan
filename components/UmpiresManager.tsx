@@ -90,7 +90,16 @@ export default function UmpiresManager() {
                 </div>
                 <div className="flex gap-2">
                   <button className="btn-secondary" onClick={() => setEditingId(umpire.id)}>Edit</button>
-                  <button className="btn-danger" onClick={() => deleteUmpire(umpire.id)}>Remove</button>
+                  <button
+                    className="btn-danger"
+                    onClick={() => {
+                      if (confirm(`Remove ${umpire.name}? This also unassigns them from any fixtures.`)) {
+                        deleteUmpire(umpire.id);
+                      }
+                    }}
+                  >
+                    Remove
+                  </button>
                 </div>
               </div>
             )
