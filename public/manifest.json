@@ -1,0 +1,10 @@
+{
+  "name": "Captain Plan",
+  "short_name": "Captain Plan",
+  "description": "Plan hockey fixtures and generate umpire/venue emails on the go.",
+  "start_url": "/",
+  "display": "standalone",
+  "background_color": "#f8fafc",
+  "theme_color": "#0f9d58",
+  "icons": []
+}

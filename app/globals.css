@@ -1,0 +1,43 @@
+@tailwind base;
+@tailwind components;
+@tailwind utilities;
+
+html,
+body {
+  @apply bg-slate-50 text-slate-900;
+}
+
+input:not([type="checkbox"]):not([type="radio"]),
+select,
+textarea {
+  @apply rounded-lg border border-slate-300 bg-white px-3 py-2 text-sm focus:border-pitch-500 focus:outline-none focus:ring-1 focus:ring-pitch-500;
+}
+
+input[type="checkbox"],
+input[type="radio"] {
+  @apply h-4 w-4 accent-pitch-600;
+}
+
+label {
+  @apply mb-1 block text-sm font-medium text-slate-600;
+}
+
+.btn {
+  @apply inline-flex items-center justify-center rounded-lg px-4 py-2 text-sm font-semibold transition-colors;
+}
+
+.btn-primary {
+  @apply btn bg-pitch-600 text-white hover:bg-pitch-700;
+}
+
+.btn-secondary {
+  @apply btn bg-white text-slate-700 ring-1 ring-slate-300 hover:bg-slate-100;
+}
+
+.btn-danger {
+  @apply btn bg-white text-red-600 ring-1 ring-red-200 hover:bg-red-50;
+}
+
+.card {
+  @apply rounded-xl bg-white p-4 shadow-sm ring-1 ring-slate-200;
+}
