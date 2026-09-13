@@ -135,7 +135,7 @@ export default function FixtureForm({
                     onChange={() => toggleContact(c.id)}
                     className="w-auto"
                   />
-                  {c.name}
+                  {c.name || c.email}
                 </label>
               ))}
             </div>

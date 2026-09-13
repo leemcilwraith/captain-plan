@@ -1,6 +1,6 @@
 export interface Contact {
   id: string;
-  name: string;
+  name?: string;
   email: string;
   phone?: string;
   role?: string;
@@ -49,6 +49,8 @@ export interface Settings {
   clubName: string;
   senderName: string;
   defaultVenueId?: string;
+  kit?: string; // e.g. "white shirts, black shorts and white socks"
+  clubhouse?: string; // shower/clubhouse location, constant across home venues
   template: EmailTemplate;
 }
 

@@ -23,13 +23,13 @@ function ContactForm({
       className="mt-2 grid grid-cols-2 gap-2 rounded-lg bg-slate-50 p-3"
       onSubmit={(e) => {
         e.preventDefault();
-        if (!name.trim() || !email.trim()) return;
-        onSave({ name: name.trim(), email: email.trim(), phone: phone.trim() || undefined, role: role.trim() || undefined });
+        if (!email.trim()) return;
+        onSave({ name: name.trim() || undefined, email: email.trim(), phone: phone.trim() || undefined, role: role.trim() || undefined });
       }}
     >
       <div className="col-span-2 sm:col-span-1">
-        <label>Name</label>
-        <input value={name} onChange={(e) => setName(e.target.value)} required className="w-full" />
+        <label>Name (optional)</label>
+        <input value={name} onChange={(e) => setName(e.target.value)} className="w-full" />
       </div>
       <div className="col-span-2 sm:col-span-1">
         <label>Email</label>
@@ -51,16 +51,52 @@ function ContactForm({
   );
 }
 
+function BulkContactForm({
+  onSave,
+  onCancel,
+}: {
+  onSave: (emails: string[]) => void;
+  onCancel: () => void;
+}) {
+  const [text, setText] = useState("");
+
+  return (
+    <form
+      className="mt-2 space-y-2 rounded-lg bg-slate-50 p-3"
+      onSubmit={(e) => {
+        e.preventDefault();
+        const emails = text.split(/[\s,;]+/).filter(Boolean);
+        if (emails.length === 0) return;
+        onSave(emails);
+      }}
+    >
+      <label>Paste one or more email addresses (comma or newline separated)</label>
+      <textarea
+        value={text}
+        onChange={(e) => setText(e.target.value)}
+        rows={2}
+        className="w-full"
+        placeholder="alex@example.com, jamie@example.com"
+      />
+      <div className="flex gap-2">
+        <button type="submit" className="btn-primary">Add contacts</button>
+        <button type="button" className="btn-secondary" onClick={onCancel}>Cancel</button>
+      </div>
+    </form>
+  );
+}
+
 function TeamCard({ team }: { team: Team }) {
   const updateTeam = useStore((s) => s.updateTeam);
   const deleteTeam = useStore((s) => s.deleteTeam);
   const addContact = useStore((s) => s.addContact);
+  const addContactsBulk = useStore((s) => s.addContactsBulk);
   const updateContact = useStore((s) => s.updateContact);
   const deleteContact = useStore((s) => s.deleteContact);
 
   const [editingName, setEditingName] = useState(false);
   const [name, setName] = useState(team.name);
-  const [addingContact, setAddingContact] = useState(false);
+  const [addMode, setAddMode] = useState<"none" | "single" | "bulk">("none");
   const [editingContactId, setEditingContactId] = useState<string | null>(null);
 
   return (
@@ -101,7 +137,7 @@ function TeamCard({ team }: { team: Team }) {
       </div>
 
       <div className="mt-3 divide-y divide-slate-100">
-        {team.contacts.length === 0 && !addingContact && (
+        {team.contacts.length === 0 && addMode === "none" && (
           <p className="py-2 text-sm text-slate-400">No contacts yet.</p>
         )}
         {team.contacts.map((contact) =>
@@ -119,12 +155,15 @@ function TeamCard({ team }: { team: Team }) {
             <div key={contact.id} className="flex items-center justify-between py-2 text-sm">
               <div>
                 <p className="font-medium">
-                  {contact.name} {contact.role && <span className="font-normal text-slate-400">· {contact.role}</span>}
+                  {contact.name || contact.email} {contact.role && <span className="font-normal text-slate-400">· {contact.role}</span>}
                 </p>
-                <p className="text-slate-500">
-                  {contact.email}
-                  {contact.phone ? ` · ${contact.phone}` : ""}
-                </p>
+                {contact.name && (
+                  <p className="text-slate-500">
+                    {contact.email}
+                    {contact.phone ? ` · ${contact.phone}` : ""}
+                  </p>
+                )}
+                {!contact.name && contact.phone && <p className="text-slate-500">{contact.phone}</p>}
               </div>
               <div className="flex gap-2">
                 <button className="btn-secondary" onClick={() => setEditingContactId(contact.id)}>Edit</button>
@@ -135,18 +174,33 @@ function TeamCard({ team }: { team: Team }) {
         )}
       </div>
 
-      {addingContact ? (
+      {addMode === "single" && (
         <ContactForm
           onSave={(contact) => {
             addContact(team.id, contact);
-            setAddingContact(false);
+            setAddMode("none");
           }}
-          onCancel={() => setAddingContact(false)}
+          onCancel={() => setAddMode("none")}
         />
-      ) : (
-        <button className="btn-secondary mt-3" onClick={() => setAddingContact(true)}>
-          + Add contact
-        </button>
+      )}
+      {addMode === "bulk" && (
+        <BulkContactForm
+          onSave={(emails) => {
+            addContactsBulk(team.id, emails);
+            setAddMode("none");
+          }}
+          onCancel={() => setAddMode("none")}
+        />
+      )}
+      {addMode === "none" && (
+        <div className="mt-3 flex gap-2">
+          <button className="btn-secondary" onClick={() => setAddMode("single")}>
+            + Add contact
+          </button>
+          <button className="btn-secondary" onClick={() => setAddMode("bulk")}>
+            + Paste emails
+          </button>
+        </div>
       )}
     </div>
   );

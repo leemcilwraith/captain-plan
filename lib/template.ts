@@ -18,6 +18,8 @@ export const TEMPLATE_VARIABLES: TemplateVariable[] = [
   { key: "umpires", label: "Umpires", description: "Names of the umpires set for the game" },
   { key: "clubName", label: "Club name", description: "Your club/team name" },
   { key: "senderName", label: "Your name", description: "Your name, for the sign-off" },
+  { key: "kit", label: "Kit colours", description: "Your team's playing kit, e.g. white shirts, black shorts and white socks" },
+  { key: "clubhouse", label: "Clubhouse / showers", description: "Shower and clubhouse location, constant across your home venues" },
 ];
 
 export function buildTemplateData(params: {
@@ -35,7 +37,7 @@ export function buildTemplateData(params: {
     : "TBC";
 
   const contactNames = contacts.length
-    ? contacts.map((c) => c.name).join(", ")
+    ? contacts.map((c) => c.name?.trim() || c.email).join(", ")
     : "there";
 
   return {
@@ -49,6 +51,8 @@ export function buildTemplateData(params: {
     umpires: umpireNames,
     clubName: settings.clubName,
     senderName: settings.senderName,
+    kit: settings.kit ?? "",
+    clubhouse: settings.clubhouse ?? "",
   };
 }
 
@@ -67,21 +71,27 @@ export function renderEmail(template: EmailTemplate, data: Record<string, string
 
 export const DEFAULT_TEMPLATE: EmailTemplate = {
   subject: "{{clubName}} vs {{oppositionTeam}} - {{date}}",
-  body: `Hi {{oppositionContact}},
+  body: `Hey all,
 
-Looking forward to hosting you for our fixture on {{date}}.
+Confirming our fixture against {{oppositionTeam}} on {{date}}.
 
-Pushback: {{pushbackTime}}
-Venue: {{venue}}
-Address: {{address}}
+Date: {{date}}
+Pushback Time: {{pushbackTime}}
+Match Location: {{venue}}
+Match Parking: {{parkingInfo}}
+Shower / Clubhouse Location: {{clubhouse}}
 
-Parking: {{parkingInfo}}
+We will be playing in {{kit}}.
 
-Umpires for the game: {{umpires}}
+Can you please let me know how many teas you will require and if there are any special dietary requirements by Thursday morning please.
 
-Please let me know if anything changes on your side.
+Umpires: {{umpires}}
+Could you also let me know if you are planning to stay for post-match teas and if either of you have any dietary requirements by Thursday morning please.
 
-Thanks,
+I look forward to seeing you all on {{date}}.
+Any questions before then, just ask.
+
+Regards,
 {{senderName}}
 {{clubName}}`,
 };

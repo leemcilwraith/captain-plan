@@ -26,10 +26,12 @@ app of choice.
 - **Venues** (`/venues`) - your home ground(s), with address and parking
   info.
 - **Email template** (`/settings`) - club name, your sign-off name, default
-  venue, and an editable subject/body template with tap-to-insert
-  variables ({{date}}, {{pushbackTime}}, {{venue}}, {{parkingInfo}},
-  {{oppositionTeam}}, {{oppositionContact}}, {{umpires}}, {{clubName}},
-  {{senderName}}), plus a live preview.
+  venue, kit colours, clubhouse/showers location, and an editable
+  subject/body template with tap-to-insert variables ({{date}},
+  {{pushbackTime}}, {{venue}}, {{parkingInfo}}, {{oppositionTeam}},
+  {{oppositionContact}}, {{umpires}}, {{clubName}}, {{senderName}},
+  {{kit}}, {{clubhouse}}), plus a live preview. The default template is
+  based on Lee's existing wording, converted to plain text.
 
 ## Local development
 
@@ -63,3 +65,14 @@ set of teams, venues, umpires and fixtures the first time they use the app
   the opposition team has at least one contact with an email address.
 - Clearing your browser's site data (or switching browser/device) clears
   this app's data, since nothing is synced to a server.
+- Team contacts don't need a name - a bare email address is enough (the
+  Teams page has a "Paste emails" option for adding several at once,
+  matching how contacts were often just a list of raw addresses in the
+  old spreadsheet). If a contact has no name, their email is used in the
+  `{{oppositionContact}}` variable instead.
+- `mailto:` links only support plain text, so the email template can't use
+  HTML formatting (bold, `<br>` tags) - the default template is a plain-text
+  version of the original spreadsheet's wording.
+- Out of scope (not carried over from the old spreadsheet): the
+  goals/cards/appearances tracker and the "player of the season" form -
+  this app is scoped to fixtures and the email workflow only.

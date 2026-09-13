@@ -36,6 +36,8 @@ export default function SettingsManager() {
   const [clubName, setClubName] = useState(settings.clubName);
   const [senderName, setSenderName] = useState(settings.senderName);
   const [defaultVenueId, setDefaultVenueId] = useState(settings.defaultVenueId ?? "");
+  const [kit, setKit] = useState(settings.kit ?? "");
+  const [clubhouse, setClubhouse] = useState(settings.clubhouse ?? "");
   const [subject, setSubject] = useState(settings.template.subject);
   const [body, setBody] = useState(settings.template.body);
   const [activeField, setActiveField] = useState<ActiveField>("body");
@@ -70,6 +72,8 @@ export default function SettingsManager() {
       clubName: clubName.trim(),
       senderName: senderName.trim(),
       defaultVenueId: defaultVenueId || undefined,
+      kit: kit.trim(),
+      clubhouse: clubhouse.trim(),
       template: { subject, body },
     });
     setSaved(true);
@@ -82,7 +86,13 @@ export default function SettingsManager() {
     venue: venues.find((v) => v.id === defaultVenueId) ?? SAMPLE_VENUE,
     umpires: SAMPLE_UMPIRES,
     contacts: SAMPLE_CONTACTS,
-    settings: { clubName: clubName || "Your Hockey Club", senderName: senderName || "Your Name", template: { subject, body } },
+    settings: {
+      clubName: clubName || "Your Hockey Club",
+      senderName: senderName || "Your Name",
+      kit: kit || "white shirts, black shorts and white socks",
+      clubhouse: clubhouse || "Your clubhouse address",
+      template: { subject, body },
+    },
   });
   const preview = renderEmail({ subject, body }, previewData);
 
@@ -109,6 +119,24 @@ export default function SettingsManager() {
                 </option>
               ))}
             </select>
+          </div>
+          <div>
+            <label>Kit colours</label>
+            <input
+              value={kit}
+              onChange={(e) => setKit(e.target.value)}
+              placeholder="e.g. white shirts, black shorts and white socks"
+              className="w-full"
+            />
+          </div>
+          <div>
+            <label>Clubhouse / showers</label>
+            <input
+              value={clubhouse}
+              onChange={(e) => setClubhouse(e.target.value)}
+              placeholder="e.g. Horsham Sports Club, Cricket Field Rd, Horsham RH12 1TE"
+              className="w-full"
+            />
           </div>
         </div>
       </div>

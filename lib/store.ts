@@ -15,6 +15,7 @@ interface StoreActions {
   deleteTeam: (id: string) => void;
 
   addContact: (teamId: string, contact: Omit<Contact, "id">) => void;
+  addContactsBulk: (teamId: string, emails: string[]) => void;
   updateContact: (teamId: string, contactId: string, patch: Partial<Omit<Contact, "id">>) => void;
   deleteContact: (teamId: string, contactId: string) => void;
 
@@ -40,6 +41,8 @@ const defaultSettings: Settings = {
   clubName: "",
   senderName: "",
   defaultVenueId: undefined,
+  kit: "",
+  clubhouse: "",
   template: DEFAULT_TEMPLATE,
 };
 
@@ -76,6 +79,17 @@ export const useStore = create<Store>()(
         set((state) => ({
           teams: state.teams.map((t) =>
             t.id === teamId ? { ...t, contacts: [...t.contacts, { ...contact, id }] } : t
+          ),
+        }));
+      },
+      addContactsBulk: (teamId, emails) => {
+        const newContacts = emails
+          .map((e) => e.trim())
+          .filter(Boolean)
+          .map((email) => ({ id: createId(), email }));
+        set((state) => ({
+          teams: state.teams.map((t) =>
+            t.id === teamId ? { ...t, contacts: [...t.contacts, ...newContacts] } : t
           ),
         }));
       },
